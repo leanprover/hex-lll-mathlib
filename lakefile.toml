@@ -1,8 +1,9 @@
 name = "hex-lll-mathlib"
 defaultTargets = ["HexLLLMathlib"]
 
-# Full transitive Hex closure pinned explicitly (Lake does not reconcile
-# mismatched diamond pins; see plan pin-discipline).
+# The full transitive Hex closure is pinned explicitly. Lake does not reconcile
+# mismatched revisions of a package required at more than one point in the
+# graph, so every Hex pin here must move together with its source repo.
 [[require]]
 name = "HexLLL"
 git = "https://github.com/kim-em/hex-lll.git"
