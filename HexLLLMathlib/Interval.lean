@@ -1,5 +1,9 @@
-import HexLLL.Basic
-import HexGramSchmidtMathlib.Int
+module
+
+public import HexLLL.Basic
+public import HexGramSchmidtMathlib.Int
+
+public section
 
 /-!
 Soundness of the fixed-precision interval reducedness checker.
