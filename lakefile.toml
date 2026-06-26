@@ -7,27 +7,27 @@ defaultTargets = ["HexLLLMathlib"]
 [[require]]
 name = "HexLLL"
 git = "https://github.com/kim-em/hex-lll.git"
-rev = "08233d28b73d314039706b97973c01ef835fe214"
+rev = "a9c3ba5732db36f9303d8a8389ffc85b327892b7"
 
 [[require]]
 name = "HexGramSchmidtMathlib"
 git = "https://github.com/kim-em/hex-gram-schmidt-mathlib.git"
-rev = "50f6b099f7889562fee4a00ef2f18e67b4a67970"
+rev = "2e1dec9bd238bb1a43b79b4160af952002caa25c"
 
 [[require]]
 name = "HexMatrixMathlib"
 git = "https://github.com/kim-em/hex-matrix-mathlib.git"
-rev = "c45893d36ac0d58c2159b77f11158a7bf29f5577"
+rev = "96e1a0907b76aa648caaa984b26e2c4ed98912f9"
 
 [[require]]
 name = "HexGramSchmidt"
 git = "https://github.com/kim-em/hex-gram-schmidt.git"
-rev = "a60ff9d05438db95a7728f700eea3578a9600b62"
+rev = "ee2a2896077eff44852e3e8a28e17d2208376e7a"
 
 [[require]]
 name = "HexMatrix"
 git = "https://github.com/kim-em/hex-matrix.git"
-rev = "2b6b1127c43e5e3a1fc935222376713f7bc843fc"
+rev = "9e3d029b1d95426d04b132b37ff3a1f1790f6e25"
 
 [[require]]
 name = "mathlib"

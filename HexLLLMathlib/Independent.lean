@@ -1,7 +1,11 @@
-import HexLLL.Basic
-import HexLLLMathlib.Basic
-import HexGramSchmidtMathlib.Int
-import HexGramSchmidtMathlib.Update
+module
+
+public import HexLLL.Basic
+public import HexLLLMathlib.Basic
+public import HexGramSchmidtMathlib.Int
+public import HexGramSchmidtMathlib.Update
+
+public section
 
 /-!
 Mathlib-side independence theorems for `HexLLL`.
@@ -796,6 +800,7 @@ end LLLState
 satisfy size reduction (for all `i < k`, `j < i`) and the adjacent Lovász
 condition at `(i, i + 1)` (for all `i + 1 < k`). At `k = n` this coincides
 with `isLLLReduced`; at `k ≤ 1` it is vacuously true. -/
+@[expose]
 def prefixLLLReduced (b : Matrix Int n m) (k : Nat) (δ : Rat) : Prop :=
   let basis := GramSchmidt.Int.basis b
   let coeffs := GramSchmidt.Int.coeffs b
