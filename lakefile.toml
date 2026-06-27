@@ -7,7 +7,7 @@ defaultTargets = ["HexLLLMathlib"]
 [[require]]
 name = "HexLLL"
 git = "https://github.com/kim-em/hex-lll.git"
-rev = "cdf4e609729b3db32ec79616349a9cfe47108a91"
+rev = "585e74d18e855d180f0495ca49f1208f7bb5d536"
 
 [[require]]
 name = "HexGramSchmidtMathlib"
