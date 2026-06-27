@@ -650,7 +650,7 @@ theorem swapStep_valid (s : LLLState n m) (k : Nat)
 predicate.  Mirrors `sizeReduce_independent` for the swap step of the LLL
 inner loop. -/
 theorem swapStep_independent (s : LLLState n m) (k : Nat)
-    (hind : s.b.independent) (hvalid : s.Valid) (hk0 : 0 < k) (hk : k < n) :
+    (hind : s.b.independent) (_hvalid : s.Valid) (hk0 : 0 < k) (hk : k < n) :
     (s.swapStep k).b.independent := by
   rw [swapStep_b_eq s k hk hk0]
   intro t
@@ -1993,7 +1993,7 @@ private theorem lllLoop_eq_of_fuel_gt_measure
         have hk0 : 0 < k := Nat.lt_of_lt_of_le Nat.zero_lt_one hk
         -- Convert the negated `≥` to the strict `<` shape expected by
         -- swapStep_potential_lt.
-        push_neg at hcond
+        push Not at hcond
         have hpot_lt :
             ((s.sizeReduce k).swapStep k).potential < (s.sizeReduce k).potential :=
           swapStep_potential_lt (s.sizeReduce k) k hsR_ind hsR_valid hk0 hlt
@@ -2229,7 +2229,7 @@ theorem lllLoop_isLLLReduced_of_fuel_gt_measure
         have : n - (k + 1) + 1 ≤ n - k := by omega
         omega
       · -- Swap branch: Lovász integer check fails, swap shortens prefix.
-        push_neg at hcond
+        push Not at hcond
         obtain ⟨hnum_pos, hden_pos, hnum_le_den⟩ := lovasz_swap_hyps δ hδ hδ'
         have hpot_lt :
             ((s.sizeReduce k).swapStep k).potential < (s.sizeReduce k).potential :=
