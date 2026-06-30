@@ -5,6 +5,11 @@ defaultTargets = ["HexLLLMathlib"]
 # mismatched revisions of a package required at more than one point in the
 # graph, so every Hex pin here must move together with its source repo.
 [[require]]
+name = "HexBasic"
+git = "https://github.com/kim-em/hex-basic.git"
+rev = "40bc251f7a825a3927fc13309189b867316253c3"
+
+[[require]]
 name = "HexLLL"
 git = "https://github.com/kim-em/hex-lll.git"
 rev = "23ae97ba78b631aac46b18b951946c2ddcb1f725"
