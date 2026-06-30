@@ -7,62 +7,62 @@ defaultTargets = ["HexLLLMathlib"]
 [[require]]
 name = "HexBasic"
 git = "https://github.com/kim-em/hex-basic.git"
-rev = "49d4eb822ce66aa14b18c2472c18848a2411792d"
+rev = "c9cb6bcb3287ea0870f66c9dfcba08baa08f97f6"
 
 [[require]]
 name = "HexLLL"
 git = "https://github.com/kim-em/hex-lll.git"
-rev = "0f674cd0de4e2ed400370713b31152f37f5633f2"
+rev = "95202b452cb25dbcf084c7a6527c2df5858ac430"
 
 [[require]]
 name = "HexGramSchmidtMathlib"
 git = "https://github.com/kim-em/hex-gram-schmidt-mathlib.git"
-rev = "300d79f52d1ae85ad8dc9241af365bfffee82d51"
+rev = "d227f04329b3abcad140789202f71d13ce676c67"
 
 [[require]]
 name = "HexRowReduceMathlib"
 git = "https://github.com/kim-em/hex-row-reduce-mathlib.git"
-rev = "17eef8c591bf66576c4ab2b1d2ef9cee7f8ca2ac"
+rev = "f71f5f93d05125e1f806d8449f8b495fad429fdc"
 
 [[require]]
 name = "HexDeterminantMathlib"
 git = "https://github.com/kim-em/hex-determinant-mathlib.git"
-rev = "6c03715c299e5be6ac15960233a6a5c6d1c430e3"
+rev = "7714f1421f41c34cf0806accb497699613083d88"
 
 [[require]]
 name = "HexBareissMathlib"
 git = "https://github.com/kim-em/hex-bareiss-mathlib.git"
-rev = "a939c4068a45b654bd9312d25ef0f0d4cd46922f"
+rev = "63b8eee6d6c428172d5da6bc2b0056b6a7a87e93"
 
 [[require]]
 name = "HexMatrixMathlib"
 git = "https://github.com/kim-em/hex-matrix-mathlib.git"
-rev = "ad3189f98d3bc9001b11b229b1b0304f8d284ace"
+rev = "fd01fba69095034c7ee992c488017bd9da1b94a9"
 
 [[require]]
 name = "HexGramSchmidt"
 git = "https://github.com/kim-em/hex-gram-schmidt.git"
-rev = "4fd416d0ee1ad4b0bd002dcd75774a91e04c2355"
+rev = "42a1525418b1545ede3c99734e2566be774f0efc"
 
 [[require]]
 name = "HexRowReduce"
 git = "https://github.com/kim-em/hex-row-reduce.git"
-rev = "962bf360dd394acd319ab8f2d632d6809cbc1340"
+rev = "30839abafa39e1a93ddc1e586a3d57e2f4daa0c6"
 
 [[require]]
 name = "HexDeterminant"
 git = "https://github.com/kim-em/hex-determinant.git"
-rev = "7b9428bf69a29b70986bedccbdd4f92c8d982784"
+rev = "fc7b52c3d37e1dace152b691799fe752a1b88bac"
 
 [[require]]
 name = "HexBareiss"
 git = "https://github.com/kim-em/hex-bareiss.git"
-rev = "25c67906f895d21a4de457407635bfd097356db7"
+rev = "9dfceef81b598704c15aec29f7817e2cca087902"
 
 [[require]]
 name = "HexMatrix"
 git = "https://github.com/kim-em/hex-matrix.git"
-rev = "a84b3d2bd4186eaebcabbffe0f8bae32b752eccb"
+rev = "d47efb355647c3ab888a035ecfe395be286f2881"
 
 [[require]]
 name = "mathlib"
