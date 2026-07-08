@@ -12,57 +12,57 @@ rev = "f1580d28c2e9ff9e8d4d7cdef9dccbaa17780b03"
 [[require]]
 name = "HexLLL"
 git = "https://github.com/leanprover/hex-lll.git"
-rev = "3b4d8ae5d98fca1fd738d6bc12985acc3e245f6a"
+rev = "ea9b5811ffb5c888eb3e71485a649aaa40a0797a"
 
 [[require]]
 name = "HexGramSchmidtMathlib"
 git = "https://github.com/leanprover/hex-gram-schmidt-mathlib.git"
-rev = "12cdb10dd2933e90a06ca1e9db134f53afded476"
+rev = "06acf34175d105ef322e24a60efeba1b0d8460bf"
 
 [[require]]
 name = "HexRowReduceMathlib"
 git = "https://github.com/leanprover/hex-row-reduce-mathlib.git"
-rev = "9a4178ecfc3611bc7b0b8736533d0272f0c4fefe"
+rev = "942cae5488e05ddf293a7f0f3fd7ed095e34b64e"
 
 [[require]]
 name = "HexDeterminantMathlib"
 git = "https://github.com/leanprover/hex-determinant-mathlib.git"
-rev = "89ca1b3f5bb99da37688351f5936e4aa7c9dffcd"
+rev = "e5d646df54cbe693a2c8deb094770dd977875a7b"
 
 [[require]]
 name = "HexBareissMathlib"
 git = "https://github.com/leanprover/hex-bareiss-mathlib.git"
-rev = "9227e58021cbe9793dd0461915d8feb9118c57f0"
+rev = "2ef209e76b27450d272944609bc8ad85a756652e"
 
 [[require]]
 name = "HexMatrixMathlib"
 git = "https://github.com/leanprover/hex-matrix-mathlib.git"
-rev = "60a54cfbdc76dc987471f764f4c0f8ee13efaf1c"
+rev = "be15f40e4942fe78ed28f037c9407a94bc3c10ce"
 
 [[require]]
 name = "HexGramSchmidt"
 git = "https://github.com/leanprover/hex-gram-schmidt.git"
-rev = "e52f819eb824c938c51b301961fcbddcbbe06bbe"
+rev = "6bae0c6ed6c19c44956dc69eb31487fc3596f01d"
 
 [[require]]
 name = "HexRowReduce"
 git = "https://github.com/leanprover/hex-row-reduce.git"
-rev = "931e792951b6bf46e5b18882d98fc2c6b4f083fe"
+rev = "a5b4db02cadc7a1e60e2ae7e085cb6facf415ee0"
 
 [[require]]
 name = "HexDeterminant"
 git = "https://github.com/leanprover/hex-determinant.git"
-rev = "c9192f6614c58cb7962f690c83f1c46d9ff78199"
+rev = "20f5785e9c85e9faa481d6b67c1382b6655b842e"
 
 [[require]]
 name = "HexBareiss"
 git = "https://github.com/leanprover/hex-bareiss.git"
-rev = "92bbafa711cc786562b702a147cd5ab7c65ee6e3"
+rev = "0317e62974acadbb68caf1f57defcc90cfe80b99"
 
 [[require]]
 name = "HexMatrix"
 git = "https://github.com/leanprover/hex-matrix.git"
-rev = "e221fd8e1520fee80419e19ff50d1520bf3ec8d5"
+rev = "d45bf749d6283726b8df43b5be9e6dde350666d6"
 
 [[require]]
 name = "mathlib"
