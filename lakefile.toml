@@ -12,7 +12,7 @@ rev = "f1580d28c2e9ff9e8d4d7cdef9dccbaa17780b03"
 [[require]]
 name = "HexLLL"
 git = "https://github.com/leanprover/hex-lll.git"
-rev = "ea9b5811ffb5c888eb3e71485a649aaa40a0797a"
+rev = "a73f188bbd7ea48c4a1bb1e6d608b4f131026512"
 
 [[require]]
 name = "HexGramSchmidtMathlib"
