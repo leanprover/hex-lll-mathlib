@@ -119,7 +119,7 @@ private theorem vector_modify_get_ne {α : Type*} {n : Nat}
 /-- Inner foldl in `swapStep`'s `setPrefixFrom`: setting positions `0..km1-1` of a
 row to `source[·]`. -/
 private def setPrefix (source row : Vector Int n) (km1 : Fin n) : Vector Int n :=
-  (List.finRange km1.val).foldl
+  Fin.foldl km1.val
     (fun row j =>
       let jFin : Fin n := ⟨j.val, Nat.lt_trans j.isLt km1.isLt⟩
       row.set jFin (source.get jFin))
@@ -201,14 +201,16 @@ private theorem setPrefix_get_lt {source row : Vector Int n} {km1 : Fin n}
     (l : Fin n) (hl : l.val < km1.val) :
     (setPrefix source row km1).get l = source.get l := by
   unfold setPrefix
-  rw [foldl_setSource_get_eq (Nat.le_of_lt km1.isLt) source row l]
+  rw [Fin.foldl_eq_finRange_foldl,
+    foldl_setSource_get_eq (Nat.le_of_lt km1.isLt) source row l]
   simp [hl]
 
 private theorem setPrefix_get_ge {source row : Vector Int n} {km1 : Fin n}
     (l : Fin n) (hl : km1.val ≤ l.val) :
     (setPrefix source row km1).get l = row.get l := by
   unfold setPrefix
-  rw [foldl_setSource_get_eq (Nat.le_of_lt km1.isLt) source row l]
+  rw [Fin.foldl_eq_finRange_foldl,
+    foldl_setSource_get_eq (Nat.le_of_lt km1.isLt) source row l]
   simp [Nat.not_lt.mpr hl]
 
 /-- Outer foldl in `swapStep` over rows above `k`. The update applied to row `i`
@@ -384,17 +386,19 @@ private theorem swapStep_valid (s : LLLState n m) (k : Nat)
             (setPrefix (s.ν.getRow km1) · km1) with hνRows_def
         set νPivot : Hex.Matrix Int n n := νRowsSwapped.modifyRow kFin.val (·.set km1 B)
           with hνPivot_def
-        -- Unfold the goal to expose the ν' foldl, then apply
-        -- `foldl_modify_rows_get`.
-        simp only [Fin.foldl_eq_finRange_foldl]
-        change
-          (((List.finRange n).foldl
+        -- Fold the goal's outer `ν'` loop over the opaque `νPivot` base, then
+        -- convert only that outer `Fin.foldl n` to `List.finRange` for
+        -- `foldl_modify_matrix_getRow`. The inner `setPrefix` folds live inside
+        -- `νPivot` and stay as `Fin.foldl`, matching its definition.
+        show
+          ((Fin.foldl n
               (fun (ν : Hex.Matrix Int n n) (i : Fin n) =>
                 if _ : k < i.val then
                   ν.modifyRow i.val (upd i)
                 else ν)
               νPivot).getRow iFin).get jFin =
             ((GramSchmidt.Int.scaledCoeffs b').getRow iFin).get jFin
+        rw [Fin.foldl_eq_finRange_foldl]
         have hν'_get :
             ((List.finRange n).foldl
                 (fun (ν : Hex.Matrix Int n n) (i : Fin n) =>
@@ -2448,7 +2452,7 @@ by `isLLLReduced.mono_η`. On the certified-dispatch path it follows from
 theorem lll_isLLLReduced (b : Matrix Int n m) (δ : Rat)
     (hδ : (121 / 400 : Rat) < δ) (hδ' : δ ≤ 1) (hn : 1 ≤ n)
     (hind : b.independent) :
-    isLLLReduced (lll b δ hδ hδ' hn hind) δ (11 / 20) := by
+    isLLLReduced (lll b δ hδ hδ' hn) δ (11 / 20) := by
   unfold lll
   cases hd : LLLProvider.dispatch b δ with
   | none =>
@@ -2462,7 +2466,7 @@ theorem lll_isLLLReduced (b : Matrix Int n m) (δ : Rat)
 theorem lll_memLattice_iff (b : Matrix Int n m) (δ : Rat)
     (hδ : (121 / 400 : Rat) < δ) (hδ' : δ ≤ 1) (hn : 1 ≤ n)
     (hind : b.independent) (v : Vector Int m) :
-    Matrix.memLattice (lll b δ hδ hδ' hn hind) v ↔ Matrix.memLattice b v := by
+    Matrix.memLattice (lll b δ hδ hδ' hn) v ↔ Matrix.memLattice b v := by
   unfold lll
   cases hd : LLLProvider.dispatch b δ with
   | none =>
@@ -2475,7 +2479,7 @@ theorem lll_memLattice_iff (b : Matrix Int n m) (δ : Rat)
 theorem lll_independent (b : Matrix Int n m) (δ : Rat)
     (hδ : (121 / 400 : Rat) < δ) (hδ' : δ ≤ 1) (hn : 1 ≤ n)
     (hind : b.independent) :
-    (lll b δ hδ hδ' hn hind).independent := by
+    (lll b δ hδ hδ' hn).independent := by
   unfold lll
   cases hd : LLLProvider.dispatch b δ with
   | none =>
@@ -2485,7 +2489,7 @@ theorem lll_independent (b : Matrix Int n m) (δ : Rat)
       exact (dispatch_some_property hd).2.1
 
 /-- Public LLL short-vector bound at `η = 11/20`. For any independent
-integer basis `b`, the first row of `Hex.lll b δ ... hind` has squared norm at
+integer basis `b`, the first row of `Hex.lll b δ …` has squared norm at
 most `(1 / (δ − 121/400))^(n − 1)` times the squared norm of any nonzero
 lattice vector. -/
 theorem lll_short_vector
@@ -2493,19 +2497,19 @@ theorem lll_short_vector
     (hδ : (121 / 400 : Rat) < δ) (hδ' : δ ≤ 1) (hn : 1 ≤ n)
     (hind : b.independent)
     {v : Vector Int m} (hv : Matrix.memLattice b v) (hv' : v ≠ 0) :
-    ((((lll b δ hδ hδ' hn hind).row
+    ((((lll b δ hδ hδ' hn).row
         ⟨0, Nat.lt_of_lt_of_le Nat.zero_lt_one hn⟩).normSq : Int) : Rat) ≤
       (1 / (δ - 121 / 400)) ^ (n - 1) * ((v.normSq : Int) : Rat) := by
-  have hred : isLLLReduced (lll b δ hδ hδ' hn hind) δ (11 / 20) :=
+  have hred : isLLLReduced (lll b δ hδ hδ' hn) δ (11 / 20) :=
     lll_isLLLReduced b δ hδ hδ' hn hind
-  have hind' : (lll b δ hδ hδ' hn hind).independent :=
+  have hind' : (lll b δ hδ hδ' hn).independent :=
     lll_independent b δ hδ hδ' hn hind
-  have hv_lll : Matrix.memLattice (lll b δ hδ hδ' hn hind) v :=
+  have hv_lll : Matrix.memLattice (lll b δ hδ hδ' hn) v :=
     (lll_memLattice_iff b δ hδ hδ' hn hind v).mpr hv
   have hδη : (11 / 20 : Rat) * (11 / 20) < δ := by
     have : (11 / 20 : Rat) * (11 / 20) = 121 / 400 := by grind
     grind
-  have hbnd := Hex.short_vector_bound_of_size_bound (lll b δ hδ hδ' hn hind)
+  have hbnd := Hex.short_vector_bound_of_size_bound (lll b δ hδ hδ' hn)
     hind' hred (by grind) hδη hδ' hn hv_lll hv'
   have hηη : (11 / 20 : Rat) * (11 / 20) = 121 / 400 := by grind
   simpa [hηη] using hbnd
