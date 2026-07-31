@@ -6,7 +6,7 @@ Authors: Kim Morrison
 
 module
 
-public import HexLLL.Basic
+public import HexLLL
 public import HexLLLMathlib.State
 public import HexLLLMathlib.Checker
 public import HexGramSchmidtMathlib.Int
@@ -15,10 +15,10 @@ public import HexGramSchmidtMathlib.Update
 public section
 
 /-!
-Mathlib-side correctness of the executable LLL reducers. The per-step
+Invariants of the executable LLL reducers. The per-step
 `Valid`/independence preservation, the potential strict-decrease and fuel
 sufficiency, and the loop-invariant induction culminate in the reducedness,
-lattice, and rational short-vector capstones for `Hex.lllNative` and
+lattice, and rational short-vector theorems for `Hex.lllNative` and
 `Hex.lll`.
 -/
 
@@ -35,7 +35,7 @@ open Hex.Internal
 namespace Matrix
 
 /-- The identity matrix is independent: every executable leading Gram
-determinant is positive. Used by Phase 4 benchmarks of
+determinant is positive. Used by benchmarks of
 `lll.firstShortVector`, where the identity basis is the degenerate BZ-style
 recombination input with all-zero lift coefficients. -/
 theorem identity_independent {n : Nat} : (Matrix.identity (R := Int) n).independent := by
@@ -44,29 +44,18 @@ theorem identity_independent {n : Nat} : (Matrix.identity (R := Int) n).independ
 private theorem gramMatrix_takeRows_eq_principalSubmatrix {n : Nat} (M : Matrix Int n n) (k : Nat)
     (hk : k ≤ n) :
     gramMatrix (takeRows M k hk) = principalSubmatrix (gramMatrix M) k hk := by
-  apply Hex.Matrix.ext
-  apply Vector.ext
-  intro i hi
-  apply Vector.ext
-  intro j hj
-  let iFin : Fin k := ⟨i, hi⟩
-  let jFin : Fin k := ⟨j, hj⟩
-  let ii : Fin n := ⟨i, Nat.lt_of_lt_of_le hi hk⟩
-  let jj : Fin n := ⟨j, Nat.lt_of_lt_of_le hj hk⟩
-  have hrow_i : row (takeRows M k hk) iFin = row M ii := by
+  apply Hex.Matrix.ext_getElem
+  intro i j
+  rw [getElem_gramMatrix, getElem_principalSubmatrix, getElem_gramMatrix]
+  have hrow : ∀ p : Fin k,
+      row (takeRows M k hk) p = row M ⟨p.val, Nat.lt_of_lt_of_le p.isLt hk⟩ := by
+    intro p
     apply Vector.ext
     intro c hc
-    simp [row, takeRows, ofFn, iFin, ii]
-  have hrow_j : row (takeRows M k hk) jFin = row M jj := by
-    apply Vector.ext
-    intro c hc
-    simp [row, takeRows, ofFn, jFin, jj]
-  have hdot :
-      (row (takeRows M k hk) iFin).dotProduct (row (takeRows M k hk) jFin) =
-        (row M ii).dotProduct (row M jj) := by
-    rw [hrow_i, hrow_j]
-  simpa [gramMatrix, principalSubmatrix, ofFn, iFin, jFin, ii, jj] using
-    hdot
+    show (row (takeRows M k hk) p)[(⟨c, hc⟩ : Fin n)] =
+      (row M ⟨p.val, Nat.lt_of_lt_of_le p.isLt hk⟩)[(⟨c, hc⟩ : Fin n)]
+    rw [getElem_row, getElem_row, getElem_takeRows]
+  rw [hrow i, hrow j]
 
 private theorem independent_of_upperTriangular_pos_diag {n : Nat}
     (M : Matrix Int n n)
@@ -84,7 +73,7 @@ namespace Internal.LLLState
 
 /-- Size reduction preserves the executable Gram-determinant independence
 predicate.  This public theorem lives in the Mathlib-side library so the
-Mathlib-free LLL core does not expose determinant-bound preservation surfaces. -/
+Mathlib-free LLL implementation does not expose determinant-bound preservation theorems. -/
 theorem sizeReduce_independent (s : LLLState n m) (k : Nat)
     (hind : s.b.independent) (hvalid : s.Valid) (hvalid' : (s.sizeReduce k).Valid) :
     (s.sizeReduce k).b.independent := by
@@ -287,10 +276,9 @@ private theorem foldl_modify_matrix_getRow
       by_cases hkx : k < x.val
       · rw [if_pos hkx, if_pos hkx, ih (acc.modifyRow x.val (upd x)), Hex.Matrix.rows_modifyRow]
       · rw [if_neg hkx, if_neg hkx, ih acc]
-  unfold Hex.Matrix.getRow
-  rw [key base]
-  simpa [Vector.get, Fin.getElem_fin] using
-    foldl_modify_rows_get k xs hnd base.rows upd l
+  have h := foldl_modify_rows_get k xs hnd base.rows upd l
+  rw [← key base] at h
+  simpa [vector_get_eq_getElem, Hex.Matrix.getElem_rows] using h
 
 /-- Field projections through `swapStep`'s `0 < k < n` branch. -/
 private theorem swapStep_b_eq (s : LLLState n m) (k : Nat) (hk : k < n) (hk0 : 0 < k) :
@@ -786,7 +774,7 @@ theorem swapStep_independent (s : LLLState n m) (k : Nat)
     rw [hbridge]
     exact hind t
 
-/-! ### Prefix LLL invariants under `swapStep`
+/-! # Prefix LLL invariants under `swapStep`
 
 For row indices strictly below `k - 1`, both the Gram-Schmidt basis row and
 the rational coefficient entries are preserved by `swapStep s k`, because
@@ -1028,7 +1016,7 @@ theorem swapStep_prefixLLLReduced (s : LLLState n m) (k : Nat) (δ : Rat)
       apply h.mono
       apply max_le <;> omega
 
-/-! ### Size-reduce Valid preservation
+/-! # Size-reduce Valid preservation
 
 The single-column update `sizeReduceColumn` edits `b`, `ν` at row `k`,
 and leaves `d` alone.  Validity is preserved because the integer
@@ -1078,7 +1066,7 @@ private theorem sizeReduceColumn_ν_get_k (s : LLLState n m) (j k : Fin n)
           r * Int.ofNat (s.d.get ⟨j.val + 1, Nat.succ_lt_succ j.isLt⟩)) := by
   subst hr
   unfold sizeReduceColumn; rw [dif_pos hreduce]
-  exact Vector.getElem_set_self k.isLt
+  exact Hex.Matrix.setRow_get_self s.ν k _
 
 /-- Field projection: `sizeReduceColumn`'s `.ν` row at indices other than `k`
 under the reducing branch (unchanged). -/
@@ -1089,7 +1077,7 @@ private theorem sizeReduceColumn_ν_get_ne (s : LLLState n m) (j k : Fin n)
     (i : Fin n) (hi : i ≠ k) :
     (s.sizeReduceColumn j k hjk).ν.getRow i = s.ν.getRow i := by
   unfold sizeReduceColumn; rw [dif_pos hreduce]
-  exact Vector.getElem_set_ne k.isLt i.isLt (fun h => hi (Fin.eq_of_val_eq h.symm))
+  exact Hex.Matrix.setRow_row_ne s.ν k i _ hi
 
 /-- The single-column size reduction preserves `Valid`. -/
 theorem sizeReduceColumn_valid (s : LLLState n m) (j k : Fin n)
@@ -1235,7 +1223,7 @@ theorem sizeReduce_valid (s : LLLState n m) (k : Nat) (hvalid : s.Valid) :
   · rw [dif_neg hk]
     exact hvalid
 
-/-! ### Size-reduce size-reducedness
+/-! # Size-reduce size-reducedness
 
 After `LLLState.sizeReduce s k`, the row `k` of the integer scaled coefficients
 satisfies `2 * |ν[k][j]| ≤ d[j+1]` for every `j < k` (the integer formulation
@@ -1477,8 +1465,7 @@ theorem sizeReduce_ν_bound (s : LLLState n m) (k : Nat) (hk : k < n)
       (pairwise_finRange_reverse_lt k)
       s hvalid hind ⟨j, hj⟩ (List.mem_reverse.mpr (List.mem_finRange _))
 
-/-- **The size-reduce size-reducedness theorem (Sub-issue A of #6576).**
-After `LLLState.sizeReduce s k`, the row `k` of the rational Gram-Schmidt
+/-- After `LLLState.sizeReduce s k`, the row `k` of the rational Gram-Schmidt
 coefficients is size-reduced: `4 * μ[k][j]² ≤ 1` for every `j < k`. -/
 theorem sizeReduce_size_reduced (s : LLLState n m) (k : Nat) (hk : k < n)
     (hvalid : s.Valid) (hind : s.b.independent) :
@@ -1577,7 +1564,7 @@ theorem sizeReduce_size_reduced (s : LLLState n m) (k : Nat) (hk : k < n)
   rw [div_le_one (by positivity)]
   exact hsq_le
 
-/-! ### Potential strict-decrease under failing Lovász
+/-! # Potential strict-decrease under failing Lovász
 
 These lemmas package the multiplicative termination potential
 `d_1 · … · d_{n-1}` behaviour under the two inner-loop updates:
@@ -1700,7 +1687,7 @@ Hypotheses:
   integer inequality on its numerator and denominator (in the form
   `lllLoop`'s integer Lovász test consumes; follows from `1/4 < δ ≤ 1`).
 * `hfail`: the failing integer Lovász condition at `k`, exactly the
-  test `lllLoop` evaluates before dispatching the swap branch.
+  test `lllLoop` evaluates before selecting the swap branch.
 
 Conclusion: `(s.swapStep k).potential < s.potential`. -/
 theorem swapStep_potential_lt (s : LLLState n m) (k : Nat)
@@ -1897,11 +1884,10 @@ theorem swapStep_potential_lt (s : LLLState n m) (k : Nat)
   exact foldl_mul_strict_lt (List.nodup_finRange _) hi₀_mem f g hf_pos hfg_eq hglt 1
     Nat.one_pos
 
-/-! ### Fuel sufficiency for `lllLoop`
+/-! # Fuel sufficiency for `lllLoop`
 
-The outer LLL loop `lllLoop` was made total in #6564 by structural
-recursion on a `fuel` argument, with `fuel = 0` returning the current
-basis as a pipeline-unreachable fallback (per SPEC §8).  This section
+The outer LLL loop `lllLoop` is total by structural recursion on a `fuel`
+argument, with `fuel = 0` returning the current basis. This section
 proves the fallback unreachable for valid input: the bound
 `lllFuel s = (s.potential + 1) * (n + 1)` is sufficient for the loop
 started at `k = 1` on `s = ofBasis b`.
@@ -2098,9 +2084,8 @@ independent basis, started at row `k = 1`, the bound
 `lllFuel s = (s.potential + 1) * (n + 1)` is enough fuel to reach the
 `k = n` base case.  Equivalently, `lllLoop` is fuel-stable above this
 threshold: running with any `fuel' ≥ lllFuel s` returns the same matrix.
-This discharges the SPEC §8 "unreachable-by-pipeline-invariant"
-classification for the `fuel = 0` fallback in `lllLoop` (introduced by
-the Route A totality refactor #6564). -/
+Thus the `fuel = 0` fallback in `lllLoop` is unreachable from valid public
+computation inputs. -/
 theorem lllLoop_fuel_sufficient
     (s : LLLState n m) (δ : Rat) (hδ : 1/4 < δ) (hδ' : δ ≤ 1) (hn : 1 ≤ n)
     (hvalid : s.Valid) (hind : s.b.independent) {fuel' : Nat}
@@ -2115,7 +2100,7 @@ theorem lllLoop_fuel_sufficient
     omega
   · exact hfuel
 
-/-! ### Size-reduce coefficient-row preservation
+/-! # Size-reduce coefficient-row preservation
 
 Size reduction at row `k` rewrites only that row's coefficients; rows at
 indices `i ≠ k` are preserved by every iteration of the inner foldl.  This
@@ -2216,7 +2201,7 @@ theorem sizeReduce_prefixLLLReduced (s : LLLState n m) (k : Nat) (δ : Rat)
     rw [hb_i, hb_ip1, hμ_eq]
     exact h.2 i hik hin
 
-/-! ### Loop invariant induction
+/-! # Loop invariant induction
 
 The `prefixLLLReduced` predicate is preserved by every iteration of `lllLoop`
 under the standard validity / independence hypotheses, and at the `k = n`
@@ -2356,163 +2341,4 @@ theorem lllLoop_independent
 
 end Internal.LLLState
 
-/-! ### Capstones
-
-The unconditional LLL guarantees split across two surfaces:
-
-* **Native** (`Hex.lllNative`, classical bound, precondition `1/4 < δ`).
-  Carries `isLLLReduced … δ (1/2)` because the integer size-reduction step
-  inside the loop produces exact `|μ| ≤ 1/2`. The short-vector denominator
-  is `δ − 1/4`.
-* **Public** (`Hex.lll`, precondition `121/400 < δ`). Wraps `lllNative` and
-  carries `isLLLReduced … δ (11/20)` (the η = 1/2 native bound weakens to
-  η = 11/20 by `isLLLReduced.mono_η`). The short-vector denominator is
-  `δ − 121/400`. This is the uniform bound an external reducer can promise. -/
-
-/-- The native LLL body produces a `(δ, 1/2)`-LLL-reduced matrix. Combines the
-fuel-sufficiency theorem (`lllLoop_fuel_sufficient`) with the loop invariant
-induction (`lllLoop_isLLLReduced_of_fuel_gt_measure`). -/
-theorem lllNative_isLLLReduced (b : Matrix Int n m) (δ : Rat)
-    (hδ : 1/4 < δ) (hδ' : δ ≤ 1) (hn : 1 ≤ n) (hind : b.independent) :
-    isLLLReduced (lllNative b δ hδ hδ' hn) δ (1 / 2) := by
-  show isLLLReduced (lllLoop (LLLState.ofBasis b) 1 δ hδ hδ'
-    (Nat.le_refl 1) hn (lllFuel (LLLState.ofBasis b))) δ (1 / 2)
-  set s := LLLState.ofBasis b with hs_def
-  have hs_valid : s.Valid := by
-    show (LLLState.ofBasis b).Valid
-    exact HexLLLMathlib.LLLState.ofBasis_valid b
-  have hs_ind : s.b.independent := hind
-  have hs_pre : prefixLLLReduced s.b 1 δ := prefixLLLReduced_one s.b δ
-  apply LLLState.lllLoop_isLLLReduced_of_fuel_gt_measure δ hδ hδ' (lllFuel s) s 1
-    (Nat.le_refl 1) hn hs_valid hs_ind hs_pre
-  show s.potential * (n + 1) + (n - 1) < (s.potential + 1) * (n + 1)
-  have : (s.potential + 1) * (n + 1) = s.potential * (n + 1) + (n + 1) := by ring
-  omega
-
-/-- The generated lattice is preserved by `Hex.lllNative`. -/
-theorem lllNative_memLattice_iff (b : Matrix Int n m) (δ : Rat)
-    (hδ : 1/4 < δ) (hδ' : δ ≤ 1) (hn : 1 ≤ n)
-    (v : Vector Int m) :
-    Matrix.memLattice (lllNative b δ hδ hδ' hn) v ↔ Matrix.memLattice b v := by
-  show Matrix.memLattice (lllLoop (LLLState.ofBasis b) 1 δ hδ hδ'
-    (Nat.le_refl 1) hn (lllFuel (LLLState.ofBasis b))) v ↔ _
-  exact lllLoop_memLattice_iff _ 1 δ hδ hδ' (Nat.le_refl 1) hn _ v
-
-/-- Independence is preserved by `Hex.lllNative`. -/
-theorem lllNative_independent (b : Matrix Int n m) (δ : Rat)
-    (hδ : 1/4 < δ) (hδ' : δ ≤ 1) (hn : 1 ≤ n) (hind : b.independent) :
-    (lllNative b δ hδ hδ' hn).independent := by
-  have hs_valid : (LLLState.ofBasis b).Valid :=
-    HexLLLMathlib.LLLState.ofBasis_valid b
-  show (lllLoop (LLLState.ofBasis b) 1 δ hδ hδ'
-    (Nat.le_refl 1) hn (lllFuel (LLLState.ofBasis b))).independent
-  exact LLLState.lllLoop_independent δ hδ hδ' _ _ 1
-    (Nat.le_refl 1) hn hs_valid hind
-
-/-- Classical native LLL short-vector bound at `η = 1/2`. For any independent
-integer basis `b`, the first row of `Hex.lllNative b δ ...` has squared norm
-at most `(1 / (δ − 1/4))^(n − 1)` times the squared norm of any nonzero
-lattice vector. -/
-theorem lllNative_short_vector
-    (b : Matrix Int n m) (δ : Rat)
-    (hδ : 1/4 < δ) (hδ' : δ ≤ 1) (hn : 1 ≤ n) (hind : b.independent)
-    {v : Vector Int m} (hv : Matrix.memLattice b v) (hv' : v ≠ 0) :
-    ((((lllNative b δ hδ hδ' hn).row
-        ⟨0, Nat.lt_of_lt_of_le Nat.zero_lt_one hn⟩).normSq : Int) : Rat) ≤
-      (1 / (δ - 1 / 4)) ^ (n - 1) * ((v.normSq : Int) : Rat) := by
-  have hred : isLLLReduced (lllNative b δ hδ hδ' hn) δ (1 / 2) :=
-    lllNative_isLLLReduced b δ hδ hδ' hn hind
-  have hind' : (lllNative b δ hδ hδ' hn).independent :=
-    lllNative_independent b δ hδ hδ' hn hind
-  have hv_lll : Matrix.memLattice (lllNative b δ hδ hδ' hn) v :=
-    (lllNative_memLattice_iff b δ hδ hδ' hn v).mpr hv
-  have hbnd := Hex.short_vector_bound_of_size_bound (lllNative b δ hδ hδ' hn) hind'
-    hred (by grind) (by grind) hδ' hn hv_lll hv'
-  -- Rewrite `(1/2) * (1/2)` as `1/4` in the resulting denominator.
-  have hηη : (1 / 2 : Rat) * (1 / 2) = 1 / 4 := by grind
-  rw [hηη] at hbnd
-  exact hbnd
-
-/-- Property triple for an accepted dispatch result: a `B'` returned by
-`LLLProvider.dispatch b δ` generates the same lattice as `b`, is independent,
-and is `(δ, 11/20)`-LLL-reduced. Composes `dispatch_some_certCheck` with
-`HexLLLMathlib.certCheck_sound`, the single trusted property-level bridge of
-`hex-lll` §"Certified external dispatch". -/
-theorem dispatch_some_property {b : Matrix Int n m} {δ : Rat}
-    {B' : Matrix Int n m} (h : LLLProvider.dispatch b δ = some B') :
-    (∀ v, b.memLattice v ↔ B'.memLattice v) ∧
-      B'.independent ∧ isLLLReduced B' δ (11 / 20) := by
-  obtain ⟨U, V, hcheck⟩ := LLLProvider.dispatch_some_certCheck h
-  exact HexLLLMathlib.certCheck_sound hcheck
-
-/-- The public LLL `lll` produces a `(δ, 11/20)`-LLL-reduced matrix. On the
-native path this is `lllNative_isLLLReduced` (`η = 1/2`) lifted to `η = 11/20`
-by `isLLLReduced.mono_η`. On the certified-dispatch path it follows from
-`certCheck_sound` via `dispatch_some_property`. -/
-theorem lll_isLLLReduced (b : Matrix Int n m) (δ : Rat)
-    (hδ : (121 / 400 : Rat) < δ) (hδ' : δ ≤ 1) (hn : 1 ≤ n)
-    (hind : b.independent) :
-    isLLLReduced (lll b δ hδ hδ' hn) δ (11 / 20) := by
-  unfold lll
-  cases hd : LLLProvider.dispatch b δ with
-  | none =>
-      exact Hex.Internal.isLLLReduced.mono_η _ (by grind) (by grind)
-        (lllNative_isLLLReduced b δ
-          (Hex.Internal.one_quarter_lt_of_eta_eleven_twentieths hδ) hδ' hn hind)
-  | some B' =>
-      exact (dispatch_some_property hd).2.2
-
-/-- The generated lattice is preserved by `Hex.lll`. -/
-theorem lll_memLattice_iff (b : Matrix Int n m) (δ : Rat)
-    (hδ : (121 / 400 : Rat) < δ) (hδ' : δ ≤ 1) (hn : 1 ≤ n)
-    (hind : b.independent) (v : Vector Int m) :
-    Matrix.memLattice (lll b δ hδ hδ' hn) v ↔ Matrix.memLattice b v := by
-  unfold lll
-  cases hd : LLLProvider.dispatch b δ with
-  | none =>
-      exact lllNative_memLattice_iff b δ
-        (Hex.Internal.one_quarter_lt_of_eta_eleven_twentieths hδ) hδ' hn v
-  | some B' =>
-      exact ((dispatch_some_property hd).1 v).symm
-
-/-- Independence is preserved by `Hex.lll`. -/
-theorem lll_independent (b : Matrix Int n m) (δ : Rat)
-    (hδ : (121 / 400 : Rat) < δ) (hδ' : δ ≤ 1) (hn : 1 ≤ n)
-    (hind : b.independent) :
-    (lll b δ hδ hδ' hn).independent := by
-  unfold lll
-  cases hd : LLLProvider.dispatch b δ with
-  | none =>
-      exact lllNative_independent b δ
-        (Hex.Internal.one_quarter_lt_of_eta_eleven_twentieths hδ) hδ' hn hind
-  | some B' =>
-      exact (dispatch_some_property hd).2.1
-
-/-- Public LLL short-vector bound at `η = 11/20`. For any independent
-integer basis `b`, the first row of `Hex.lll b δ …` has squared norm at
-most `(1 / (δ − 121/400))^(n − 1)` times the squared norm of any nonzero
-lattice vector. -/
-theorem lll_short_vector
-    (b : Matrix Int n m) (δ : Rat)
-    (hδ : (121 / 400 : Rat) < δ) (hδ' : δ ≤ 1) (hn : 1 ≤ n)
-    (hind : b.independent)
-    {v : Vector Int m} (hv : Matrix.memLattice b v) (hv' : v ≠ 0) :
-    ((((lll b δ hδ hδ' hn).row
-        ⟨0, Nat.lt_of_lt_of_le Nat.zero_lt_one hn⟩).normSq : Int) : Rat) ≤
-      (1 / (δ - 121 / 400)) ^ (n - 1) * ((v.normSq : Int) : Rat) := by
-  have hred : isLLLReduced (lll b δ hδ hδ' hn) δ (11 / 20) :=
-    lll_isLLLReduced b δ hδ hδ' hn hind
-  have hind' : (lll b δ hδ hδ' hn).independent :=
-    lll_independent b δ hδ hδ' hn hind
-  have hv_lll : Matrix.memLattice (lll b δ hδ hδ' hn) v :=
-    (lll_memLattice_iff b δ hδ hδ' hn hind v).mpr hv
-  have hδη : (11 / 20 : Rat) * (11 / 20) < δ := by
-    have : (11 / 20 : Rat) * (11 / 20) = 121 / 400 := by grind
-    grind
-  have hbnd := Hex.short_vector_bound_of_size_bound (lll b δ hδ hδ' hn)
-    hind' hred (by grind) hδη hδ' hn hv_lll hv'
-  have hηη : (11 / 20 : Rat) * (11 / 20) = 121 / 400 := by grind
-  simpa [hηη] using hbnd
-
 end Hex
-

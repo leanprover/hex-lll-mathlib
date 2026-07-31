@@ -4,70 +4,75 @@ defaultTargets = ["HexLLLMathlib"]
 # The full transitive Hex closure is pinned explicitly. Lake does not reconcile
 # mismatched revisions of a package required at more than one point in the
 # graph, so every Hex pin here must move together with its source repo.
+leanOptions = [
+  { name = "doc.verso", value = true },
+  { name = "doc.verso.suggestions", value = false },
+]
+
 [[require]]
 name = "HexBasic"
 git = "https://github.com/leanprover/hex-basic.git"
-rev = "f1580d28c2e9ff9e8d4d7cdef9dccbaa17780b03"
+rev = "a3ab4fd9a79efbe6b07337836b3b5828d22d65a6"
 
 [[require]]
 name = "HexLLL"
 git = "https://github.com/leanprover/hex-lll.git"
-rev = "a73f188bbd7ea48c4a1bb1e6d608b4f131026512"
+rev = "76338eba34901960a7be341ea5d20e4f3d8fd215"
 
 [[require]]
 name = "HexGramSchmidtMathlib"
 git = "https://github.com/leanprover/hex-gram-schmidt-mathlib.git"
-rev = "06acf34175d105ef322e24a60efeba1b0d8460bf"
+rev = "12308baf178176edb54060d75fea8d954b736b5b"
 
 [[require]]
 name = "HexRowReduceMathlib"
 git = "https://github.com/leanprover/hex-row-reduce-mathlib.git"
-rev = "942cae5488e05ddf293a7f0f3fd7ed095e34b64e"
+rev = "eb267a682d0430fd9fd3ab0bd37f2c5d741abf82"
 
 [[require]]
 name = "HexDeterminantMathlib"
 git = "https://github.com/leanprover/hex-determinant-mathlib.git"
-rev = "e5d646df54cbe693a2c8deb094770dd977875a7b"
+rev = "3f04d9eeda6251f6d71c7b3bd4650d635b321812"
 
 [[require]]
 name = "HexBareissMathlib"
 git = "https://github.com/leanprover/hex-bareiss-mathlib.git"
-rev = "2ef209e76b27450d272944609bc8ad85a756652e"
+rev = "d64bfdacf41fd0b9894d3775818881749949a3bb"
 
 [[require]]
 name = "HexMatrixMathlib"
 git = "https://github.com/leanprover/hex-matrix-mathlib.git"
-rev = "be15f40e4942fe78ed28f037c9407a94bc3c10ce"
+rev = "7b28ee80d5f372054e167b7ce0a4fe57dac90e13"
 
 [[require]]
 name = "HexGramSchmidt"
 git = "https://github.com/leanprover/hex-gram-schmidt.git"
-rev = "6bae0c6ed6c19c44956dc69eb31487fc3596f01d"
+rev = "4a3b351e56d510026a2327b77bf3711687ddeced"
 
 [[require]]
 name = "HexRowReduce"
 git = "https://github.com/leanprover/hex-row-reduce.git"
-rev = "a5b4db02cadc7a1e60e2ae7e085cb6facf415ee0"
+rev = "79b2be598fa85f5e57c6f0b213419c948c07f656"
 
 [[require]]
 name = "HexDeterminant"
 git = "https://github.com/leanprover/hex-determinant.git"
-rev = "20f5785e9c85e9faa481d6b67c1382b6655b842e"
+rev = "f86320a1285796c94cb42c42afb04fde53c33234"
 
 [[require]]
 name = "HexBareiss"
 git = "https://github.com/leanprover/hex-bareiss.git"
-rev = "0317e62974acadbb68caf1f57defcc90cfe80b99"
+rev = "e21c06404d9f821a2bfd5809aa92c1d8be3a0035"
 
 [[require]]
 name = "HexMatrix"
 git = "https://github.com/leanprover/hex-matrix.git"
-rev = "d45bf749d6283726b8df43b5be9e6dde350666d6"
+rev = "9b6ec9285021793e9f43e1c7b3b37da957b6f2c4"
 
 [[require]]
 name = "mathlib"
 git = "https://github.com/leanprover-community/mathlib4.git"
-rev = "v4.32.0-rc1-patch1"
+rev = "v4.32.2"
 
 [[lean_lib]]
 name = "HexLLLMathlib"

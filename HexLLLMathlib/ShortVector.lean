@@ -6,14 +6,14 @@ Authors: Kim Morrison
 
 module
 
-public import HexLLLMathlib.Bridge
-public import HexLLLMathlib.Reducer
-public import HexLLL.Basic
+public import HexLLLMathlib.IntegerLattice
+public import HexLLLMathlib.Reduction
+public import HexLLL
 
 public section
 
 /-!
-The headline Mathlib capstones: the Euclidean short-vector bounds on the
+Euclidean short-vector bounds on the
 algorithm outputs, `lll_first_row_norm_sq_le` (at `η = 11/20`) and
 `lllNative_first_row_norm_sq_le` (classical `η = 1/2`). Unlike the conditional
 `reduced_first_row_norm_sq_le`, these discharge the `isLLLReduced` hypothesis
