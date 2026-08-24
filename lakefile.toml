@@ -12,67 +12,67 @@ leanOptions = [
 [[require]]
 name = "HexBasic"
 git = "https://github.com/leanprover/hex-basic.git"
-rev = "591c146eeee0ef301a110cd33c19cc0cf1e07352"
+rev = "2d7f55d190cc2df9c9bf55437f344e65fbddc7c0"
 
 [[require]]
 name = "HexLLL"
 git = "https://github.com/leanprover/hex-lll.git"
-rev = "f3988ace13f8fc1a1457e23d7d4cd4565afcc670"
+rev = "0903bf19d250627cd5526fec0dc990467d3776ba"
 
 [[require]]
 name = "HexGramSchmidtMathlib"
 git = "https://github.com/leanprover/hex-gram-schmidt-mathlib.git"
-rev = "8294e8653c66a89dcc5ae3a8b75db1192655cf2c"
+rev = "b2b0e9bfdecb6d400aeaa0b508b6e232b93bfa47"
 
 [[require]]
 name = "HexRowReduceMathlib"
 git = "https://github.com/leanprover/hex-row-reduce-mathlib.git"
-rev = "dbd8d7e8f25fcbdcb59e8e7305a5b37804eec3ee"
+rev = "c442625957482222e87d10b0d1d11dafd859ac91"
 
 [[require]]
 name = "HexDeterminantMathlib"
 git = "https://github.com/leanprover/hex-determinant-mathlib.git"
-rev = "d9b3e5b89d0cd8f349818a64f71702d881f14f9c"
+rev = "4a552910b6cbaa3010378d965365871d5818514f"
 
 [[require]]
 name = "HexBareissMathlib"
 git = "https://github.com/leanprover/hex-bareiss-mathlib.git"
-rev = "a596ba2847d3d315ac4df8ecfc17aada7cf06b1c"
+rev = "79ed00ad497ec92f70a6a9439d499a06e6081793"
 
 [[require]]
 name = "HexMatrixMathlib"
 git = "https://github.com/leanprover/hex-matrix-mathlib.git"
-rev = "e1a67fa059145d29614fb979e0411e582fbf9772"
+rev = "7da10508fdb5a489805004e5550992662b8b533c"
 
 [[require]]
 name = "HexGramSchmidt"
 git = "https://github.com/leanprover/hex-gram-schmidt.git"
-rev = "74c1e10220f02eaffa090656ef076bca0d769103"
+rev = "a6f9a5a3cefa8383a3736b35c94be35e1d830cf5"
 
 [[require]]
 name = "HexRowReduce"
 git = "https://github.com/leanprover/hex-row-reduce.git"
-rev = "75648463d1a8253bf38405dc6c1c78851d3cee49"
+rev = "1edfb6581a6f076170516da619cbe972fc9bc51a"
 
 [[require]]
 name = "HexDeterminant"
 git = "https://github.com/leanprover/hex-determinant.git"
-rev = "fe179e0a2b9d42ef50617df00de3f91fc7f2d013"
+rev = "b9b21e295175885e2ee20728c8f8a13d00e36124"
 
 [[require]]
 name = "HexBareiss"
 git = "https://github.com/leanprover/hex-bareiss.git"
-rev = "274d7ef98e03c207940ecb8a6f13400afc088738"
+rev = "00341772642a2f85b3541bd9ff063d2fcb169bb4"
 
 [[require]]
 name = "HexMatrix"
 git = "https://github.com/leanprover/hex-matrix.git"
-rev = "e5483ea2d5b666618a54d0ea50bcbe6ba3608d39"
+rev = "049bf8e57b33cb87b4012ed9d2da4cce0af296d9"
 
 [[require]]
 name = "mathlib"
 git = "https://github.com/leanprover-community/mathlib4.git"
-rev = "v4.33.0-rc1"
+rev = "v4.34.0-rc2"
 
 [[lean_lib]]
 name = "HexLLLMathlib"
