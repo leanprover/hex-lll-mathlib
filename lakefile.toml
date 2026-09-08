@@ -12,62 +12,62 @@ leanOptions = [
 [[require]]
 name = "HexBasic"
 git = "https://github.com/leanprover/hex-basic.git"
-rev = "1a0fff2c8f545753b01cff0d941bf48f945cd299"
+rev = "v0.2.0"
 
 [[require]]
 name = "HexLLL"
 git = "https://github.com/leanprover/hex-lll.git"
-rev = "31048a6651d9aea781227c1dc2ff4e9cac9da05d"
+rev = "v0.2.0"
 
 [[require]]
 name = "HexGramSchmidtMathlib"
 git = "https://github.com/leanprover/hex-gram-schmidt-mathlib.git"
-rev = "e585b5ec0ae93cac938b7ad3ca5a726822a867b1"
+rev = "v0.2.0"
 
 [[require]]
 name = "HexRowReduceMathlib"
 git = "https://github.com/leanprover/hex-row-reduce-mathlib.git"
-rev = "4b409d713cc3737391fee28c4b6335426bad6ffe"
+rev = "v0.2.0"
 
 [[require]]
 name = "HexDeterminantMathlib"
 git = "https://github.com/leanprover/hex-determinant-mathlib.git"
-rev = "dbc5e2e2a0c39a95614b0063875a5bbd0f7a7263"
+rev = "v0.2.0"
 
 [[require]]
 name = "HexBareissMathlib"
 git = "https://github.com/leanprover/hex-bareiss-mathlib.git"
-rev = "c73cc618573bf5829062ba0fa133bcab04d67ba5"
+rev = "v0.2.0"
 
 [[require]]
 name = "HexMatrixMathlib"
 git = "https://github.com/leanprover/hex-matrix-mathlib.git"
-rev = "ee61da70b963a82eb056a5304aa5a65e1af21bf8"
+rev = "v0.2.0"
 
 [[require]]
 name = "HexGramSchmidt"
 git = "https://github.com/leanprover/hex-gram-schmidt.git"
-rev = "6458852e64832f9fd708f45b822826c823a9bd5a"
+rev = "v0.2.0"
 
 [[require]]
 name = "HexRowReduce"
 git = "https://github.com/leanprover/hex-row-reduce.git"
-rev = "35b27c54b2211b0a2b4e74f74d0041242edcd524"
+rev = "v0.2.0"
 
 [[require]]
 name = "HexDeterminant"
 git = "https://github.com/leanprover/hex-determinant.git"
-rev = "d542b77b0e9e6796a79efb85dd55e1b815d336bd"
+rev = "v0.2.0"
 
 [[require]]
 name = "HexBareiss"
 git = "https://github.com/leanprover/hex-bareiss.git"
-rev = "cd53ab18c8c6bddea76f698b848ce68e8fd7825a"
+rev = "v0.2.0"
 
 [[require]]
 name = "HexMatrix"
 git = "https://github.com/leanprover/hex-matrix.git"
-rev = "f857b2b4495dc8d9ba6583d559d2b885ccbf40fc"
+rev = "v0.2.0"
 
 [[require]]
 name = "mathlib"
